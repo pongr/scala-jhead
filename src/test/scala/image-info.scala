@@ -7,8 +7,6 @@ import org.apache.commons.io.IOUtils
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
-
-
 class ImageInfoSpec extends Specification  {
 
   def getDateTime(s: String) = {
@@ -47,8 +45,8 @@ class ImageInfoSpec extends Specification  {
                                              None, // light source
                                              None, // distant range
                                              Some("\"?\""))
-     image.info.resolutionInfo must_== ResolutionInfo(Some("180/1"), Some("180/1"), Some("2"))
-     image.info.thumbInfo must_== ThumbnailInfo(Some(1524), Some(5342))
+      image.info.resolutionInfo must_== ResolutionInfo(Some("180/1"), Some("180/1"), Some("2"))
+      image.info.thumbInfo must_== ThumbnailInfo(Some(1524), Some(5342))
     }
 
     "extract EXIF headers from fujifilm-dx10" in {
@@ -79,6 +77,39 @@ class ImageInfoSpec extends Specification  {
                                              None)
       image.info.resolutionInfo must_== ResolutionInfo(Some("72/1"), Some("72/1"), Some("2"))
       image.info.thumbInfo must_== ThumbnailInfo(Some(856),Some(10274))
+    }
+
+    "extract EXIF headers from fujifilm-finepix40i" in {
+      val image = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/fujifilm-finepix40i.jpg")))
+      image.info.fileInfo.fileSize must_== Some(43183)
+      image.info.gpsInfo must_== GpsInfo(None, None, None)
+      image.info.generalInfo must_== GeneralInfo(Some("FUJIFILM"),
+                                                 Some("FinePix40i"),
+                                                 Some(getDateTime("2000:08:04 18:22:57")),
+                                                 Some(600),
+                                                 Some(450),
+                                                 Some(1),
+                                                 None,
+                                                 None,
+                                                 Some(1))
+      image.info.otherInfo must_== OtherInfo(Some("870/100"),
+                                             None,
+                                             Some("300/100"),
+                                             None,
+                                             Some("10.08mm"),
+                                             Some("0/100"),
+                                             None,
+                                             None,
+                                             None,
+                                             Some("5"),
+                                             Some("2"),
+                                             None,
+                                             Some("200"),
+                                             None,
+                                             None,
+                                             None)
+      image.info.resolutionInfo must_== ResolutionInfo(Some("72/1"),Some("72/1"),Some("2"))
+      image.info.thumbInfo must_== ThumbnailInfo(Some(1074),Some(8691))
     }
 
   }

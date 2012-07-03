@@ -105,7 +105,7 @@ object OtherInfo extends Constructor[OtherInfo] {
                               c.getString("CCD width"),
                               c.getString("ExposureBiasValue", separator="="),
                               c.getString("Digital Zoom"),
-                              c.getString("FocalLengthIn35mmFilm", separator="="), 
+                              c.getString("FocalLengthIn35mmFilm", separator="="),
                               c.getString("Whitebalance"),
                               c.getString("MeteringMode", separator="="),
                               c.getString("ExposureProgram", separator="="),
