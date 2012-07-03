@@ -29,8 +29,7 @@ case class JHead(file: File) {
 
   def autorot = exec("jhead", "-autorot", file.getAbsolutePath) { _ => Unit }
 
-  def norot = exec("jhead", "-norot", file.getAbsolutePath) { _ => Unit }
-
+  def purejpg = exec("jhead", "-purejpg", file.getAbsolutePath) { _ => Unit }
 
   def info = {
     var result: Seq[String] = Nil
