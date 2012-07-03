@@ -2,6 +2,9 @@ package com.pongr.jhead
 
 import java.io._
 
+import scala.io.Source
+import scala.sys.process.{ Process, ProcessIO, ProcessLogger }
+
 object Control {
 
   def using[A, B <: {def close(): Unit}] (closeable: B) (f: B => A): A =
@@ -9,24 +12,13 @@ object Control {
 
   def exec(cmdWithArgs: String*)(func : String => Unit) : Unit = {
 
-    val process = new ProcessBuilder(cmdWithArgs: _*).redirectErrorStream(true).start
-    val inputReader = new BufferedReader(new InputStreamReader(process.getInputStream))
+    val process = Process(cmdWithArgs)
 
-    val outputReaderThread = new Thread(new Runnable {
-      def run : Unit = {
-        var ln : String = null
-        while({ln = inputReader.readLine; ln != null})
-          func(ln)
-      }
-    })
+    val pio = new ProcessIO(_ => (),
+                            stdout => Source.fromInputStream(stdout).getLines.foreach(func),
+                            _ => ())
 
-    outputReaderThread.start()
-
-    process.waitFor
-
-    outputReaderThread.join()
-
-    inputReader.close()
-
+    // process lines_! ProcessLogger(func)
+    process.run(pio)
   }
 }
