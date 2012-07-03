@@ -19,7 +19,7 @@ class ImageInfoSpec extends Specification  {
 
   "EmailSpec test" should {
 
-    "extract Exif headers from canon-ixus" in {
+    "extract EXIF headers from canon-ixus" in {
       val image = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/canon-ixus.jpg")))
 
       image.info.fileInfo.fileSize must_== Some(128037)

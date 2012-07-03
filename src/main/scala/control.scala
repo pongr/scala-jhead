@@ -9,24 +9,24 @@ object Control {
 
   def exec(cmdWithArgs: String*)(func : String => Unit) : Unit = {
 
-    val proc = new ProcessBuilder(cmdWithArgs: _*).redirectErrorStream(true).start
-    val ins = new BufferedReader(new InputStreamReader(proc.getInputStream))
+    val process = new ProcessBuilder(cmdWithArgs: _*).redirectErrorStream(true).start
+    val inputReader = new BufferedReader(new InputStreamReader(process.getInputStream))
 
     val outputReaderThread = new Thread(new Runnable {
       def run : Unit = {
         var ln : String = null
-        while({ln = ins.readLine; ln != null})
+        while({ln = inputReader.readLine; ln != null})
           func(ln)
       }
     })
 
     outputReaderThread.start()
 
-    proc.waitFor
+    process.waitFor
 
     outputReaderThread.join()
 
-    ins.close()
+    inputReader.close()
 
   }
 }
