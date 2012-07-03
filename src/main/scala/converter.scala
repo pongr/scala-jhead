@@ -5,8 +5,8 @@ import org.joda.time.format.DateTimeFormat
 
 class Converter(info: Seq[String]) {
   def getString(name: String, separator: String = ": "): Option[String] = {
-    val r = (name + """\s*""" + separator).r
-    info.filter (!r.findFirstIn(_).isEmpty).headOption match {
+    val r = ("^" + name + """\s*""" + separator).r
+    info.filter (e => !r.findFirstIn(e.trim).isEmpty).headOption match {
       case Some(value) => Some(value.split(separator)(1).trim)
       case _ => None
     }

@@ -34,11 +34,7 @@ case class JHead(file: File) {
   def info = {
     var result: Seq[String] = Nil
     exec("jhead", "-v", file.getAbsolutePath) { out => if (!isBlank(out)) result +:= out }
-
-    println("----------------------------")
-    println(ImageInfo(result))
-    println("----------------------------")
-    result
+    ImageInfo(result)
   }
 
   def version = {
