@@ -11,8 +11,6 @@ import org.joda.time.format.DateTimeFormat
 
 class ImageInfoSpec extends Specification  {
 
-  val canonIxusBytes = IOUtils.toByteArray(getClass.getResourceAsStream("/canon-ixus.jpg"))
-  
   def getDateTime(s: String) = {
     val formatter = DateTimeFormat.forPattern("yyyy:MM:dd HH:mm:ss")
     formatter.parseDateTime(s)
@@ -21,25 +19,18 @@ class ImageInfoSpec extends Specification  {
 
   "EmailSpec test" should {
 
-    "extract header exif headers from canon-ixus" in {
+    "extract Exif headers from canon-ixus" in {
+      val image = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/canon-ixus.jpg")))
 
-      val image = JHead(canonIxusBytes) 
-
-      // image.info.fileInfo.fileDateTime must_== Some(getDateTime("2001:06:14 07:21:39"))
       image.info.fileInfo.fileSize must_== Some(128037)
-                                      
       image.info.gpsInfo must_== GpsInfo(None, None, None)
-      
       image.info.generalInfo must_== GeneralInfo(Some("Canon"),
                                                  Some("Canon DIGITAL IXUS"),
                                                  Some(getDateTime("2001:06:09 15:17:32")),
-                                                 Some(640),
-                                                 Some(480),
+                                                 Some(640), Some(480),
                                                  Some(1),
-                                                 None,
-                                                 None,
+                                                 None, None,
                                                  Some(0))
-
       image.info.otherInfo must_== OtherInfo(Some("346/32"), // focal length
                                              Some("1/350"), // exposure time
                                              Some("262144/65536"), // apertureValue
@@ -56,10 +47,38 @@ class ImageInfoSpec extends Specification  {
                                              None, // light source
                                              None, // distant range
                                              Some("\"?\""))
-
      image.info.resolutionInfo must_== ResolutionInfo(Some("180/1"), Some("180/1"), Some("2"))
-     
      image.info.thumbInfo must_== ThumbnailInfo(Some(1524), Some(5342))
+    }
+
+    "extract EXIF headers from fujifilm-dx10" in {
+      val image = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/fujifilm-dx10.jpg")))
+
+      image.info.fileInfo.fileSize must_== Some(133074)
+      image.info.gpsInfo must_== GpsInfo(None, None, None)
+      image.info.generalInfo must_== GeneralInfo(Some("FUJIFILM"),
+                                                 Some("DX-10"),
+                                                 Some(getDateTime("2001:04:12 20:33:14")),
+                                                 Some(1024), Some(768),
+                                                 Some(1),
+                                                 None, None,
+                                                 Some(1))
+      image.info.otherInfo must_== OtherInfo(Some("58/10"),
+                                             None,
+                                             Some("41/10"),
+                                             None,
+                                             Some("4.76mm"),
+                                             Some("0/10"),
+                                             None, None, None,
+                                             Some("5"),
+                                             Some("2"),
+                                             None,
+                                             Some("150"),
+                                             None,
+                                             None,
+                                             None)
+      image.info.resolutionInfo must_== ResolutionInfo(Some("72/1"), Some("72/1"), Some("2"))
+      image.info.thumbInfo must_== ThumbnailInfo(Some(856),Some(10274))
     }
 
   }
