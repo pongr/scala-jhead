@@ -127,10 +127,8 @@ class jheadInfoSpec extends Specification  {
       image._2.head.contains("Nonfatal Error") must_== true
     }
 
-    "extract EXIF headers and error messages from photo contains error" in {
+    "return error message from non-existent photo" in {
       val image = new JHead(new java.io.File("/fakepic.jpg")).info
-      println(image)
-      image._2.isEmpty must_== false
       image._2.mkString(",").contains("Error : No such file") must_== true
     }
 
