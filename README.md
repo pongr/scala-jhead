@@ -21,7 +21,6 @@ A minimal scala wrapper around [jhead](http://www.sentex.net/~mwandel/jhead/).
 ## Usage
 
 ```scala
-// val jhead = new JHead(new File("/tmp/image.jpg"))
 val jhead = JHead(imageBytes)
 val imageInfo = jhead.info._1
 val errorMessages = jhead.info._2
