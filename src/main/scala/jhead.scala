@@ -27,20 +27,16 @@ case class JHead(file: File) {
     }
   }
 
-  def autorot = exec("jhead", "-autorot", file.getAbsolutePath) { _ => Unit }
+  def autorot = exec("jhead", "-autorot", file.getAbsolutePath)
 
-  def purejpg = exec("jhead", "-purejpg", file.getAbsolutePath) { _ => Unit }
+  def purejpg = exec("jhead", "-purejpg", file.getAbsolutePath)
 
   def info = {
     var result: Seq[String] = Nil
-    exec("jhead", "-v", file.getAbsolutePath) { out => if (!isBlank(out)) result +:= out }
-    ImageInfo(result)
-  }
-
-  def version = {
-    var result =  ""
-    exec("jhead", "-V") { out => if (!isBlank(out)) result += out + "\n" }
-    result.trim
+    exec("jhead", "-v", file.getAbsolutePath) match {
+      case Left (result) => ImageInfo(result)
+      case Right(errors) => throw new RuntimeException(errors.mkString("\n"))
+    }
   }
 
 }
