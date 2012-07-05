@@ -84,10 +84,6 @@ object ThumbnailInfo extends Constructor[ThumbnailInfo] {
                                   c.getInt("ThumbnailLength", separator = "="))
 }
 case class ThumbnailInfo(offset: Option[Int], length: Option[Int])
-// largestExifOffset: Option[Int],
-// atEnd: Option[String],
-// sizeOffset: Option[Int]
-
 
 object GeneralInfo extends Constructor[GeneralInfo] {
   def create = c => GeneralInfo(c.getString("Camera make"),
@@ -150,7 +146,4 @@ case class OtherInfo(
   lightSource: Option[String],
   distanceRange: Option[String],
   comments: Option[String]
-  /*commentWidthchars: Option[String],    // If nonzero], widechar comment], indicates number of chars.*/
-  /*dateTimeOffsets: Option[Seq[String]],*/
-  /*numDateTimeTags: Option[String]*/
 )
