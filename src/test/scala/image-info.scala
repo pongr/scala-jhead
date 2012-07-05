@@ -121,6 +121,13 @@ class jheadInfoSpec extends Specification  {
       info.thumbInfo must_== ThumbnailInfo(Some(1074),Some(8691))
     }
 
+    "extract GpsInfo headers" in {
+      val image = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/keyboard.jpg"))).cleanImage
+      image._2 must_== Nil
+      val info = image._1
+      info.gpsInfo must_== GpsInfo(Some("N 41d 35m 12.01s"), Some("W 93d 37m 35.52s"), Some("348.00m"))
+    }
+
     "extract EXIF headers and error messages from photo contains non fatal error" in {
       val image = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/MemoryError2.jpg"))).info
       image._2.isEmpty must_== false
