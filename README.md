@@ -1,6 +1,6 @@
 # scala-jhead
 
-A minimal scala wrapper around jhead[jhead](http://www.sentex.net/~mwandel/jhead/).
+A minimal scala wrapper around [jhead](http://www.sentex.net/~mwandel/jhead/).
 
 ## Install
 
