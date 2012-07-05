@@ -17,9 +17,11 @@ class jheadInfoSpec extends Specification  {
   "EmailSpec test" should {
 
     "extract EXIF headers from canon-ixus" in {
-      val jhead = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/canon-ixus.jpg")))
-      val info = jhead.info._1
+      val image = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/canon-ixus.jpg"))).cleanImage
 
+      image._2 must_== Nil
+
+      val info = image._1
       info.fileInfo.fileSize must_== Some(128037)
       info.gpsInfo must_== GpsInfo(None, None, None)
       info.generalInfo must_== GeneralInfo(Some("Canon"),
@@ -50,8 +52,10 @@ class jheadInfoSpec extends Specification  {
     }
 
     "extract EXIF headers from fujifilm-dx10" in {
-      val jhead = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/fujifilm-dx10.jpg")))
-      val info = jhead.info._1
+      val image = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/fujifilm-dx10.jpg"))).cleanImage
+      image._2 must_== Nil
+
+      val info = image._1
 
       info.fileInfo.fileSize must_== Some(133074)
       info.gpsInfo must_== GpsInfo(None, None, None)
@@ -81,9 +85,11 @@ class jheadInfoSpec extends Specification  {
     }
 
     "extract EXIF headers from fujifilm-finepix40i" in {
-      val jhead = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/fujifilm-finepix40i.jpg")))
-      val info = jhead.info._1
+      val image = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/fujifilm-finepix40i.jpg"))).cleanImage
 
+      image._2 must_== Nil
+
+      val info = image._1
       info.fileInfo.fileSize must_== Some(43183)
       info.gpsInfo must_== GpsInfo(None, None, None)
       info.generalInfo must_== GeneralInfo(Some("FUJIFILM"),
@@ -113,6 +119,12 @@ class jheadInfoSpec extends Specification  {
                                        None)
       info.resolutionInfo must_== ResolutionInfo(Some("72/1"),Some("72/1"),Some("2"))
       info.thumbInfo must_== ThumbnailInfo(Some(1074),Some(8691))
+    }
+
+    "extract EXIF headers and error messages from photo contains non fatal error" in {
+      val image = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/MemoryError2.jpg"))).cleanImage
+      image._2.isEmpty must_== false
+      image._2.head.contains("Nonfatal Error") must_== true
     }
 
   }

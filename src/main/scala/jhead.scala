@@ -36,4 +36,14 @@ case class JHead(file: File) {
     (ImageInfo(result._1), result._2)
   }
 
+
+  /**
+   * Auto rotates the image and removes all exif headers.
+   * Returns ImageInfo with error messages and modified bytes.
+   */
+  def cleanImage : (ImageInfo, Seq[String], Array[Byte]) = {
+    val result = exec("jhead", "-v", "-autorot", "-purejpg", file.getAbsolutePath)
+    (ImageInfo(result._1), result._2, getBytes)
+  }
+
 }
