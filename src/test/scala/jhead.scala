@@ -23,7 +23,21 @@ class JHeadSpec extends Specification  {
       info.otherInfo must_== OtherInfo(None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None)
       info.resolutionInfo must_== ResolutionInfo(None,None,None)
       info.thumbInfo must_== ThumbnailInfo(None,None)
+    }
 
+    "rotate and remove exif headers" in {
+      val jhead = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/acer.jpg")))
+
+      jhead.info._1.generalInfo.width must_== Some(2560)
+      jhead.info._1.generalInfo.height must_== Some(1440)
+
+      val image = jhead.cleanImage
+
+      val rotated = getClass.getResourceAsStream("/acer-rotated-cleaned.jpg")
+      IOUtils.contentEquals(new ByteArrayInputStream(image._3), rotated) must_== true
+
+      image._1.generalInfo.width must_== Some(1440)
+      image._1.generalInfo.height must_== Some(2560)
     }
 
   }
