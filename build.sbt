@@ -28,6 +28,12 @@ publishTo <<= version { v: String =>
   else                             Some("releases" at nexus + "service/local/staging/deploy/maven2/")
 }
 
+publishMavenStyle := true
+
+publishArtifact in Test := false
+
+pomIncludeRepository := { _ => false }
+
 licenses := Seq("Apache-2.0" -> url("http://opensource.org/licenses/Apache-2.0"))
 
 homepage := Some(url("http://github.com/pongr/scala-jhead"))
