@@ -11,7 +11,7 @@ object Control {
     try { f(closeable) } finally { closeable.close() }
 
 
-  def exec(cmdWithArgs: String*): Either[Seq[String], Seq[String]] = {
+  def exec(cmdWithArgs: String*): (Seq[String], Seq[String]) = {
 
     val process = Process(cmdWithArgs)
 
@@ -23,6 +23,6 @@ object Control {
       line => errorLines  +:= line
     )
 
-    if (errorLines.isEmpty) Left(normalLines) else Right(errorLines)
+    (normalLines, errorLines)
   }
 }

@@ -17,7 +17,7 @@ class JHeadSpec extends Specification  {
       // all jpg
       jhead.purejpg
 
-      val info = JHead(jhead.getBytes).info
+      val info = JHead(jhead.getBytes).info._1
       info.gpsInfo must_== GpsInfo(None,None,None)
       info.generalInfo must_== GeneralInfo(None,None,None,Some(640),Some(480),None,None,None,None)
       info.otherInfo must_== OtherInfo(None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None)

@@ -31,12 +31,9 @@ case class JHead(file: File) {
 
   def purejpg = exec("jhead", "-purejpg", file.getAbsolutePath)
 
-  def info = {
-    var result: Seq[String] = Nil
-    exec("jhead", "-v", file.getAbsolutePath) match {
-      case Left (result) => ImageInfo(result)
-      case Right(errors) => throw new RuntimeException(errors.mkString("\n"))
-    }
+  def info: (ImageInfo, Seq[String])  = {
+    val result = exec("jhead", "-v", file.getAbsolutePath)
+    (ImageInfo(result._1), result._2)
   }
 
 }
