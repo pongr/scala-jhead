@@ -67,15 +67,15 @@ case class GpsInfo(gpsLat: Option[String], gpsLong: Option[String], gpsAlt: Opti
 
   val regex = """^(W|N)\s+(\d+\.?\d*)D\s+(\d+\.?\d*)M\s+(\d+\.?\d*)S""".r
 
-  def convert(s: String) = s.toUpperCase match {
+  def parse(s: String) = s.toUpperCase match {
     case regex(suffix, deg, min, sec) =>
       val loc = deg.toDouble + min.toDouble/60 + sec.toDouble/3600
       Some(if (suffix == "W") loc * (-1) else loc)
     case _ => None
   }
 
-  def latitude: Option[Double] = gpsLat flatMap convert
-  def longitude: Option[Double] = gpsLong flatMap convert
+  def latitude: Option[Double] = gpsLat flatMap parse 
+  def longitude: Option[Double] = gpsLong flatMap parse
 
 }
 

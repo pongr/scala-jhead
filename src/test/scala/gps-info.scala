@@ -6,7 +6,7 @@ class GpsInfoSpec extends Specification  {
 
   "GpsInfoSpec" should {
 
-    "convert gps latitude and longitude from string" in {
+    "parse gps latitude and longitude from string" in {
 
       var gpsInfo = GpsInfo(Some("N 43d 38m 19.39s"), Some("W 116d 14m  28.86s"), None)
       gpsInfo.latitude must_== Some(43.63871944444445)
