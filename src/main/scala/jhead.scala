@@ -35,26 +35,41 @@ object JHead {
   }
 }
 
-case class JHead(file: File) {
+class JHead(file: File) {
 
+  /**
+   * Returns the modified bytes.
+   */
   def getBytes: Array[Byte] = {
     using (new FileInputStream(file)) { output =>
       IOUtils.toByteArray(output)
     }
   }
 
+  /**
+   * Using the 'Orientation' tag of the Exif header, rotate the image so that it is upright.
+   * Executes "jhead -autorot"
+   */
   def autorot = exec("jhead", "-autorot", file.getAbsolutePath)
 
+  /**
+   * Delete all JPEG sections that aren't necessary for rendering the image.
+   * Executes "jhead -purejpg"
+   */
   def purejpg = exec("jhead", "-purejpg", file.getAbsolutePath)
 
-  def info: (ImageInfo, Seq[String])  = {
+  
+  /**
+   * Returns ImageInfo with error messages.
+   */
+  def info: (ImageInfo, Seq[String]) = {
     val result = exec("jhead", "-v", file.getAbsolutePath)
     (ImageInfo(result._1), result._2)
   }
 
 
   /**
-   * Auto rotates the image and removes all exif headers.
+   * Auto rotates the image and removes all exif headers with external call.
    * Returns ImageInfo with error messages and modified bytes.
    */
   def cleanImage : (ImageInfo, Seq[String], Array[Byte]) = {

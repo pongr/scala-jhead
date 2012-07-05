@@ -12,7 +12,6 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "ch.qos.logback" % "logback-classic" % "1.0.6",
   "org.specs2" %% "specs2" % "1.11" % "test",
   "commons-lang" % "commons-lang" % "2.5",
   "commons-io" % "commons-io" % "1.4",

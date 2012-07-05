@@ -19,9 +19,8 @@ package com.pongr.jhead
 import org.joda.time.DateTime
 
 trait Constructor[T] {
-  def parser(info: Seq[String]) = new Parser(info)
   def create: Parser => T
-  def apply(info: Seq[String]): T = create (parser(info))
+  def apply(info: Seq[String]): T = create (new Parser(info))
 }
 
 object ImageInfo {
@@ -35,7 +34,7 @@ object ImageInfo {
 }
 
 /**
- * A class contains minimal information of exif headers.
+ * Contains minimal information of exif headers.
  */
 case class ImageInfo(
   fileInfo: FileInfo,
@@ -67,13 +66,12 @@ object GpsInfo extends Constructor[GpsInfo] {
 case class GpsInfo(gpsLat: Option[String], gpsLong: Option[String], gpsAlt: Option[String])
 
 
-
 // XResolution = 72/1
 // YResolution = 72/1
 // ResolutionUnit = 2
 object ResolutionInfo extends Constructor[ResolutionInfo] {
-  def create = c => ResolutionInfo(c.getString("XResolution", "="), 
-                                   c.getString("YResolution", "="), 
+  def create = c => ResolutionInfo(c.getString("XResolution", "="),
+                                   c.getString("YResolution", "="),
                                    c.getString("ResolutionUnit", "="))
 }
 case class ResolutionInfo(x: Option[String], y: Option[String], rUnit: Option[String])

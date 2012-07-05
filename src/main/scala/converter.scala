@@ -48,11 +48,4 @@ class Parser(info: Seq[String]) {
       case _ => None
     }
 
-  def getBoolean(name: String): Option[Boolean] =
-    getString(name) match {
-      case Some(v) if (v.toLowerCase == "yes" || v.toLowerCase == "true") => Some(true)
-      case Some(v) if (v.toLowerCase == "no" || v.toLowerCase == "false") => Some(false)
-      case _ => None
-    }
-
 }
