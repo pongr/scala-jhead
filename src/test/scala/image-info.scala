@@ -122,9 +122,16 @@ class jheadInfoSpec extends Specification  {
     }
 
     "extract EXIF headers and error messages from photo contains non fatal error" in {
-      val image = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/MemoryError2.jpg"))).cleanImage
+      val image = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/MemoryError2.jpg"))).info
       image._2.isEmpty must_== false
       image._2.head.contains("Nonfatal Error") must_== true
+    }
+
+    "extract EXIF headers and error messages from photo contains error" in {
+      val image = new JHead(new java.io.File("/fakepic.jpg")).info
+      println(image)
+      image._2.isEmpty must_== false
+      image._2.mkString(",").contains("Error : No such file") must_== true
     }
 
   }
