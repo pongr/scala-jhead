@@ -69,7 +69,7 @@ class JHead(file: File) {
 
 
   /**
-   * Auto rotates the image and removes all exif headers with external call.
+   * Auto rotates the image and removes all exif headers.
    * Returns ImageInfo with error messages and modified bytes.
    */
   def cleanImage : (ImageInfo, Seq[String], Array[Byte]) = {
