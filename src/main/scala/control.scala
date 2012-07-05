@@ -14,11 +14,6 @@ object Control {
 
     val process = Process(cmdWithArgs)
 
-    val pio = new ProcessIO(_ => (),
-                            stdout => Source.fromInputStream(stdout).getLines.foreach(func),
-                            _ => ())
-
-    // process lines_! ProcessLogger(func)
-    process.run(pio)
+    process ! ProcessLogger (func)
   }
 }
