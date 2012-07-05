@@ -19,7 +19,10 @@ package com.pongr.jhead
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
-class Converter(info: Seq[String]) {
+/**
+ * Parses jhead output and gets the appropriate scala data type for the given pattern.
+ */
+class Parser(info: Seq[String]) {
 
   def getString(name: String, separator: String = ": "): Option[String] = {
     val r = ("^" + name + """\s*""" + separator).r

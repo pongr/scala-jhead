@@ -27,6 +27,9 @@ object Control {
     try { f(closeable) } finally { closeable.close() }
 
 
+  /**
+   * Executes external processes and returns the normal output and error output
+   */
   def exec(cmdWithArgs: String*): (Seq[String], Seq[String]) = {
 
     val process = Process(cmdWithArgs)

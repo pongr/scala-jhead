@@ -19,9 +19,9 @@ package com.pongr.jhead
 import org.joda.time.DateTime
 
 trait Constructor[T] {
-  def converter(info: Seq[String]) = new Converter(info)
-  def create: Converter => T
-  def apply(info: Seq[String]): T = create (converter(info))
+  def parser(info: Seq[String]) = new Parser(info)
+  def create: Parser => T
+  def apply(info: Seq[String]): T = create (parser(info))
 }
 
 object ImageInfo {
@@ -34,6 +34,9 @@ object ImageInfo {
               ThumbnailInfo(lines))
 }
 
+/**
+ * A class contains minimal information of exif headers.
+ */
 case class ImageInfo(
   fileInfo: FileInfo,
 
