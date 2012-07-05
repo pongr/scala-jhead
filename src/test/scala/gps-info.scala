@@ -22,8 +22,6 @@ class GpsInfoSpec extends Specification  {
       gpsInfo.latitude must_== Some(42.35111111111111)
       gpsInfo.longitude must_== Some(-71.19972222222222)
 
-      println(gpsInfo.latitude, gpsInfo.longitude)
-      1 must_== 1
     }
 
   }
