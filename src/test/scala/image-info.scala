@@ -126,6 +126,9 @@ class jheadInfoSpec extends Specification  {
       image._2 must_== Nil
       val info = image._1
       info.gpsInfo must_== GpsInfo(Some("N 41d 35m 12.01s"), Some("W 93d 37m 35.52s"), Some("348.00m"))
+
+      info.gpsInfo.latitude must_== Some(41.586669444444446)
+      info.gpsInfo.longitude must_== Some(-93.62653333333333)
     }
 
     "extract EXIF headers and error messages from photo contains non fatal error" in {

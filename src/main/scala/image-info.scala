@@ -63,7 +63,21 @@ case class FileInfo(
 object GpsInfo extends Constructor[GpsInfo] {
   def create = c => GpsInfo(c.getString("GPS Latitude"), c.getString("GPS Longitude"), c.getString("GPS Altitude"))
 }
-case class GpsInfo(gpsLat: Option[String], gpsLong: Option[String], gpsAlt: Option[String])
+case class GpsInfo(gpsLat: Option[String], gpsLong: Option[String], gpsAlt: Option[String]) {
+
+  val regex = """^(W|N)\s+(\d+\.?\d*)D\s+(\d+\.?\d*)M\s+(\d+\.?\d*)S""".r
+
+  def convert(s: String) = s.toUpperCase match {
+    case regex(suffix, deg, min, sec) =>
+      val loc = deg.toDouble + min.toDouble/60 + sec.toDouble/3600
+      Some(if (suffix == "W") loc * (-1) else loc)
+    case _ => None
+  }
+
+  def latitude: Option[Double] = gpsLat flatMap convert
+  def longitude: Option[Double] = gpsLong flatMap convert
+
+}
 
 
 // XResolution = 72/1
