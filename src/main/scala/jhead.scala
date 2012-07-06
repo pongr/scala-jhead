@@ -23,7 +23,8 @@ import org.apache.commons.lang.StringUtils.isBlank
 import Control._
 
 object JHead {
-  def apply(bytes: Array[Byte]) = {
+
+  def apply(bytes: Array[Byte], convert: Boolean = false): JHead = {
     val file = File.createTempFile("image", ".jpg")
 
     using (new ByteArrayInputStream(bytes)) { input =>
@@ -31,8 +32,16 @@ object JHead {
         IOUtils.copy(input, output)
       }
     }
+
+    /**
+     * Convert non jpeg image to jpeg image using imagemagick convert.
+     */
+    if (convert) exec("convert", file.getAbsolutePath, file.getAbsolutePath)
+
     new JHead(file)
   }
+
+
 }
 
 class JHead(file: File) {
@@ -45,6 +54,12 @@ class JHead(file: File) {
       IOUtils.toByteArray(output)
     }
   }
+
+  /**
+   * Returns the modified bytes as InputStream
+   */
+  def getInputStream: InputStream = new ByteArrayInputStream(getBytes)
+
 
   /**
    * Using the 'Orientation' tag of the Exif header, rotate the image so that it is upright.

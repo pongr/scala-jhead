@@ -40,5 +40,30 @@ class JHeadSpec extends Specification  {
       image._1.generalInfo.height must_== Some(2560)
     }
 
+
+    "convert bmp" in {
+      val jhead = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/passat.bmp")), convert = true)
+      val info = jhead.info._1
+      info.generalInfo.width must_== Some(500)
+      info.generalInfo.height must_== Some(316)
+      IOUtils.contentEquals(jhead.getInputStream, getClass.getResourceAsStream("/passat-bmp.jpg")) must_== true
+    }
+
+    "convert gif" in {
+      val jhead = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/passat.gif")), convert = true)
+      val info = jhead.info._1
+      info.generalInfo.width must_== Some(785)
+      info.generalInfo.height must_== Some(400)
+      IOUtils.contentEquals(jhead.getInputStream, getClass.getResourceAsStream("/passat-gif.jpg")) must_== true
+    }
+
+    "convert png" in {
+      val jhead = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/passat.png")), convert = true)
+      val info = jhead.info._1
+      info.generalInfo.width must_== Some(450)
+      info.generalInfo.height must_== Some(200)
+      IOUtils.contentEquals(jhead.getInputStream, getClass.getResourceAsStream("/passat-png.jpg")) must_== true
+    }
+
   }
 }
