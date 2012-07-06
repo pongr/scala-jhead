@@ -4,7 +4,7 @@ A minimal scala wrapper around [jhead](http://www.sentex.net/~mwandel/jhead/).
 
 ## Install
 
-### sbt 
+### sbt
 ```scala
 "com.pongr" %% "scala-jhead" % "0.1"
 ```

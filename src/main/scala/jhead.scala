@@ -92,4 +92,23 @@ class JHead(file: File) {
     (ImageInfo(result._1), result._2, getBytes)
   }
 
+
+  /**
+   * Generate thumbnails for the image
+   */
+  def generateThumbnail(width: Int, height: Int): Array[Byte] = {
+    val cropGeometry  = "%sx%s+0+0" format (width, height)
+    val thumbGeometry = "%sx%s" format (width, height)
+    val thumbFile = File.createTempFile("thumb-%sx%s-" format (width, height), ".jpg")
+    exec("convert", "-thumbnail", thumbGeometry,
+                    "-gravity", "center",
+                    "-crop", cropGeometry,
+                    "-interpolate", "bicubic",
+                    "+repage",
+                    file.getAbsolutePath, thumbFile.getAbsolutePath)
+
+    println(thumbFile.getAbsolutePath)
+    IOUtils.toByteArray(new FileInputStream(thumbFile))
+  }
+
 }
