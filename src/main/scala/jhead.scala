@@ -98,7 +98,7 @@ class JHead(file: File) {
    */
   def generateThumbnail(width: Int, height: Int): Array[Byte] = {
     val cropGeometry  = "%sx%s+0+0" format (width, height)
-    val thumbGeometry = "%sx%s" format (width, height)
+    val thumbGeometry = "%sx%s^" format (width, height)
     val thumbFile = File.createTempFile("thumb-%sx%s-" format (width, height), ".jpg")
     exec("convert", "-thumbnail", thumbGeometry,
                     "-gravity", "center",
