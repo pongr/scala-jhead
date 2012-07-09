@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2012 Pongr, Inc.
  *   
@@ -27,12 +26,12 @@ trait ImageResizer {
   /** Resize image to be maximum width of specified value, height adjusted to keep aspect ratio constant. Specified width must be greater than image width. 
     * Returns resized image and new height.
     */
-  def downsizeToWidth(bytes: Array[Byte], width: Int): (Array[Byte], Int)
+  def resizeToWidth(bytes: Array[Byte], width: Int): (Array[Byte], Int)
 
   /** Resize image to be maximum of specified size on each side. If image is portrait then remove top & bottom. If image is landsape then remove left & right.
     * Specified size must be greater than image width and height. Returns resized image.
     */
-  def downsizeToSquare(bytes: Array[Byte], size: Int): Array[Byte]
+  def resizeToSquare(bytes: Array[Byte], size: Int): Array[Byte]
 
 }
 
@@ -41,7 +40,7 @@ trait ImageResizer {
  */
 class ImageMagickResizer extends ImageResizer {
 
-  def downsizeToWidth(bytes: Array[Byte], width: Int): (Array[Byte], Int) = {
+  def resizeToWidth(bytes: Array[Byte], width: Int): (Array[Byte], Int) = {
     val file = createFile(bytes)
     val thumbFile = File.createTempFile("image-%s-" format width, ".jpg")
     exec("convert", "-thumbnail", "%sx" format width,
@@ -56,7 +55,7 @@ class ImageMagickResizer extends ImageResizer {
     (newImage, h)
   }
   
-  def downsizeToSquare(bytes: Array[Byte], size: Int): Array[Byte] = {
+  def resizeToSquare(bytes: Array[Byte], size: Int): Array[Byte] = {
     val file = createFile(bytes)
     val thumbGeometry = "%sx%s^" format (size, size)
     val cropGeometry  = "%sx%s+0+0" format (size, size)
