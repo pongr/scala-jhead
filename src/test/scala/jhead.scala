@@ -66,10 +66,13 @@ class JHeadSpec extends Specification  {
     }
 
     "generate thumbnails" in {
-      val jhead = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/mini.jpg")), convert = true)
-      val thumb150 = jhead.generateThumbnail(150, 150)
-      val thumb200 = jhead.generateThumbnail(200, 200)
-      val thumb425 = jhead.generateThumbnail(425, 425)
+      val resizer = new ImageMagickResizer
+      val bytes = IOUtils.toByteArray(getClass.getResourceAsStream("/mini.jpg"))
+
+      val thumb150 = resizer.downsizeToSquare(bytes, 150)
+      val thumb200 = resizer.downsizeToSquare(bytes, 200)
+      val thumb425 = resizer.downsizeToSquare(bytes, 425)
+
       IOUtils.contentEquals(new ByteArrayInputStream(thumb150), getClass.getResourceAsStream("/mini-150x150.jpg")) must_== true
       IOUtils.contentEquals(new ByteArrayInputStream(thumb200), getClass.getResourceAsStream("/mini-200x200.jpg")) must_== true
       IOUtils.contentEquals(new ByteArrayInputStream(thumb425), getClass.getResourceAsStream("/mini-425x425.jpg")) must_== true

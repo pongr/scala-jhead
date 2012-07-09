@@ -17,11 +17,12 @@
 package com.pongr.jhead
 
 import java.io._
+import org.apache.commons.io._
 
 import scala.io.Source
 import scala.sys.process.{ Process, ProcessIO, ProcessLogger }
 
-object Control {
+object Util {
 
   def using[A, B <: {def close(): Unit}] (closeable: B) (f: B => A): A =
     try { f(closeable) } finally { closeable.close() }
@@ -43,5 +44,15 @@ object Control {
     )
 
     (normalLines, errorLines)
+  }
+
+  def createFile(bytes: Array[Byte]) = {
+    val file = File.createTempFile("image", ".jpg")
+    using (new ByteArrayInputStream(bytes)) { input =>
+      using (new FileOutputStream(file)) { output =>
+        IOUtils.copy(input, output)
+      }
+    }
+    file
   }
 }
