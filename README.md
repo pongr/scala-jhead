@@ -1,10 +1,6 @@
 # scala-jhead
 
-A minimal scala wrapper around [jhead](http://www.sentex.net/~mwandel/jhead/).
-
-## Prerequisites
-* [jhead](http://www.sentex.net/~mwandel/jhead/).
-* [ImageMagick convert tool] (http://www.imagemagick.org/script/convert.php).
+A minimal scala wrapper around [jhead](http://www.sentex.net/~mwandel/jhead/). [jhead](http://www.sentex.net/~mwandel/jhead/) and [ImageMagick convert tool] (http://www.imagemagick.org/script/convert.php) (for converting non jpegs, resizing images) expected to be installed in the system.
 
 
 ## Install
