@@ -106,8 +106,6 @@ class JHead(file: File) {
                     "-interpolate", "bicubic",
                     "+repage",
                     file.getAbsolutePath, thumbFile.getAbsolutePath)
-
-    println(thumbFile.getAbsolutePath)
     IOUtils.toByteArray(new FileInputStream(thumbFile))
   }
 
