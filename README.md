@@ -2,6 +2,11 @@
 
 A minimal scala wrapper around [jhead](http://www.sentex.net/~mwandel/jhead/).
 
+## Prerequisites
+* [jhead](http://www.sentex.net/~mwandel/jhead/).
+* [ImageMagick convert tool] (http://www.imagemagick.org/script/convert.php).
+
+
 ## Install
 
 ### sbt
