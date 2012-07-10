@@ -34,6 +34,14 @@ class JHeadSpec extends Specification  {
       val image = jhead.cleanImage
 
       val rotated = getClass.getResourceAsStream("/acer-rotated-cleaned.jpg")
+
+      println("\n\n")
+      println(image._3.size)
+      println(IOUtils.toByteArray(rotated).size)
+      println("\n\n")
+
+      image._3.size must_== IOUtils.toByteArray(rotated).size
+
       IOUtils.contentEquals(new ByteArrayInputStream(image._3), rotated) must_== true
 
       image._1.generalInfo.width must_== Some(1440)
