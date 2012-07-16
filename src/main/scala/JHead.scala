@@ -25,7 +25,7 @@ import Util._
 object JHead {
 
   def apply(bytes: Array[Byte]): JHead = {
-    val file = createFile(bytes)
+    val file = createTempFile(bytes)
     new JHead(file)
   }
 
@@ -78,12 +78,6 @@ class JHead(file: File) {
   def cleanImage() : (ImageInfo, Seq[String], Array[Byte]) = {
     val result = exec("jhead", "-v", "-autorot", "-purejpg", file.getAbsolutePath)
     (ImageInfo(result._1), result._2, getBytes)
-  }
-
-  /** Convert non jpeg image to jpeg image using imagemagick convert. */
-  def convert(): Either[Seq[String], Array[Byte]] = {
-    val result = exec("convert", file.getAbsolutePath, file.getAbsolutePath)
-    if (result._2.size > 0) Left(result._2) else Right(getBytes)
   }
   
 }

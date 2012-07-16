@@ -18,30 +18,21 @@ package com.pongr.jhead
 
 import java.io._
 import org.apache.commons.io._
+import org.apache.commons.lang.StringUtils.isBlank
 
 import Util._
 
-trait ImageResizer {
+/** Resize and convert images using [[http://www.imagemagick.org/script/convert.php ImageMagick convert tool]]. */
+object Convert extends ImageResizer {
 
-  /** Resize image to be maximum width of specified value, height adjusted to keep aspect ratio constant. Specified width must be greater than image width. 
-    * Returns resized image and new height.
-    */
-  def resizeToWidth(bytes: Array[Byte], width: Int): (Array[Byte], Int)
+  def apply(bytes: Array[Byte]): Either[Seq[String], Array[Byte]] = {
+    val file = createTempFile(bytes)
+    val result = exec("convert", file.getAbsolutePath, file.getAbsolutePath)
+    if (result._2.size > 0) Left(result._2) else Right(getBytes(file))
+  }
 
-  /** Resize image to be maximum of specified size on each side. If image is portrait then remove top & bottom. If image is landsape then remove left & right.
-    * Specified size must be greater than image width and height. Returns resized image.
-    */
-  def resizeToSquare(bytes: Array[Byte], size: Int): Array[Byte]
-
-}
-
-/**
- * Resize images using [[http://www.imagemagick.org/script/convert.php ImageMagick convert tool]].
- */
-class ImageMagickResizer extends ImageResizer {
-
-  def resizeToWidth(bytes: Array[Byte], width: Int): (Array[Byte], Int) = {
-    val file = createFile(bytes)
+  def resizeToWidth(bytes: Array[Byte], width: Int): Array[Byte] = {
+    val file = createTempFile(bytes)
     val thumbFile = File.createTempFile("image-%s-" format width, ".jpg")
     exec("convert", "-thumbnail", "%sx" format width,
                     "-gravity", "center",
@@ -50,13 +41,11 @@ class ImageMagickResizer extends ImageResizer {
                     "+repage",
                     file.getAbsolutePath, thumbFile.getAbsolutePath)
 
-    val newImage = IOUtils.toByteArray(new FileInputStream(thumbFile))
-    val h = JHead(newImage).info._1.generalInfo.height getOrElse 0
-    (newImage, h)
+    IOUtils.toByteArray(new FileInputStream(thumbFile))
   }
   
   def resizeToSquare(bytes: Array[Byte], size: Int): Array[Byte] = {
-    val file = createFile(bytes)
+    val file = createTempFile(bytes)
     val thumbGeometry = "%sx%s^" format (size, size)
     val cropGeometry  = "%sx%s+0+0" format (size, size)
 

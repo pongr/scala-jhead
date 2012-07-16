@@ -46,7 +46,7 @@ object Util {
     (normalLines, errorLines)
   }
 
-  def createFile(bytes: Array[Byte]) = {
+  def createTempFile(bytes: Array[Byte]) = {
     val file = File.createTempFile("image", ".jpg")
     using (new ByteArrayInputStream(bytes)) { input =>
       using (new FileOutputStream(file)) { output =>
@@ -55,4 +55,11 @@ object Util {
     }
     file
   }
+
+  def getBytes(file: File): Array[Byte] = {
+    using (new FileInputStream(file)) { output =>
+      IOUtils.toByteArray(output)
+    }
+  }
+
 }
