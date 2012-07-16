@@ -31,7 +31,7 @@ class JHeadSpec extends Specification  {
       jhead.info._1.generalInfo.width must_== Some(2560)
       jhead.info._1.generalInfo.height must_== Some(1440)
 
-      val image = jhead.cleanImage
+      val image = jhead.cleanImage()
 
       val rotated = getClass.getResourceAsStream("/acer-rotated-cleaned.jpg")
       IOUtils.contentEquals(new ByteArrayInputStream(image._3), rotated) must_== true
@@ -42,7 +42,8 @@ class JHeadSpec extends Specification  {
 
 
     "convert bmp" in {
-      val jhead = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/passat.bmp")), convert = true)
+      val jhead = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/passat.bmp")))
+      jhead.convert()
       val info = jhead.info._1
       info.generalInfo.width must_== Some(500)
       info.generalInfo.height must_== Some(316)
@@ -50,7 +51,8 @@ class JHeadSpec extends Specification  {
     }
 
     "convert gif" in {
-      val jhead = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/passat.gif")), convert = true)
+      val jhead = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/passat.gif")))
+      jhead.convert()
       val info = jhead.info._1
       info.generalInfo.width must_== Some(785)
       info.generalInfo.height must_== Some(400)
@@ -58,7 +60,8 @@ class JHeadSpec extends Specification  {
     }
 
     "convert png" in {
-      val jhead = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/passat.png")), convert = true)
+      val jhead = JHead(IOUtils.toByteArray(getClass.getResourceAsStream("/passat.png")))
+      jhead.convert()
       val info = jhead.info._1
       info.generalInfo.width must_== Some(450)
       info.generalInfo.height must_== Some(200)

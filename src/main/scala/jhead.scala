@@ -24,12 +24,8 @@ import Util._
 
 object JHead {
 
-  def apply(bytes: Array[Byte], convert: Boolean = false): JHead = {
+  def apply(bytes: Array[Byte]): JHead = {
     val file = createFile(bytes)
-
-    /** Convert non jpeg image to jpeg image using imagemagick convert. */
-    if (convert) exec("convert", file.getAbsolutePath, file.getAbsolutePath)
-
     new JHead(file)
   }
 
@@ -57,13 +53,13 @@ class JHead(file: File) {
    * Using the 'Orientation' tag of the Exif header, rotate the image so that it is upright.
    * Executes "jhead -autorot"
    */
-  def autorot = exec("jhead", "-autorot", file.getAbsolutePath)
+  def autorot() = exec("jhead", "-autorot", file.getAbsolutePath)
 
   /**
    * Delete all JPEG sections that aren't necessary for rendering the image.
    * Executes "jhead -purejpg"
    */
-  def purejpg = exec("jhead", "-purejpg", file.getAbsolutePath)
+  def purejpg() = exec("jhead", "-purejpg", file.getAbsolutePath)
 
   
   /**
@@ -79,9 +75,15 @@ class JHead(file: File) {
    * Auto rotates the image and removes all exif headers.
    * Returns ImageInfo with error messages and modified bytes.
    */
-  def cleanImage : (ImageInfo, Seq[String], Array[Byte]) = {
+  def cleanImage() : (ImageInfo, Seq[String], Array[Byte]) = {
     val result = exec("jhead", "-v", "-autorot", "-purejpg", file.getAbsolutePath)
     (ImageInfo(result._1), result._2, getBytes)
+  }
+
+  /** Convert non jpeg image to jpeg image using imagemagick convert. */
+  def convert(): Either[Seq[String], Array[Byte]] = {
+    val result = exec("convert", file.getAbsolutePath, file.getAbsolutePath)
+    if (result._2.size > 0) Left(result._2) else Right(getBytes)
   }
   
 }
