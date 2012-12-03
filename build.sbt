@@ -17,7 +17,8 @@ libraryDependencies ++= Seq(
   "commons-io" % "commons-io" % "1.4",
   "joda-time" % "joda-time" % "2.1",
   "org.joda" % "joda-convert" % "1.2",
-  "com.typesafe.akka" % "akka-actor" % "2.0.4"
+  "com.typesafe.akka" % "akka-actor" % "2.0.4",
+  "org.clapper" %% "grizzled-slf4j" % "0.6.10"
 )
 
 //http://www.scala-sbt.org/using_sonatype.html
