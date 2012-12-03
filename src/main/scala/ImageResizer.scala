@@ -18,6 +18,7 @@ package com.pongr.jhead
 
 import java.io._
 import org.apache.commons.io._
+import akka.dispatch.Future
 
 import Util._
 
@@ -27,6 +28,8 @@ trait ImageResizer {
     * Returns resized image and new height.
     */
   def resizeToWidth(bytes: Array[Byte], width: Int): Array[Byte]
+
+  def resizeToWidths(bytes: Array[Byte], widths: Int*): Seq[Future[(Array[Byte], Int, Int)]]
 
   /** Resize image to be maximum of specified size on each side. If image is portrait then remove top & bottom. If image is landsape then remove left & right.
     * Specified size must be greater than image width and height. Returns resized image.

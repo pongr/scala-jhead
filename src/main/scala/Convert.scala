@@ -19,6 +19,8 @@ package com.pongr.jhead
 import java.io._
 import org.apache.commons.io._
 import org.apache.commons.lang.StringUtils.isBlank
+import akka.dispatch.{Future, ExecutionContext}
+import java.util.concurrent.Executors
 
 import Util._
 
@@ -31,16 +33,33 @@ object Convert extends ImageResizer {
     if (result._2.size > 0) Left(result._2) else Right(getBytes(file))
   }
 
-  def resizeToWidth(bytes: Array[Byte], width: Int): Array[Byte] = {
+  def resizeToWidths(bytes: Array[Byte], widths: Int*): Seq[Future[(Array[Byte], Int, Int)]] = {
     val file = createTempFile(bytes)
-    val thumbFile = File.createTempFile("image-%s-" format width, ".jpg")
+    implicit val context = ExecutionContext.fromExecutor(Executors.newCachedThreadPool()) //will this leak?
+    widths.toSeq.map { width => 
+      Future { 
+        val thumbFile = File.createTempFile("image-%s-" format width, ".jpg")
+        runConvert(file, thumbFile, width, 90)
+        val bytes = IOUtils.toByteArray(new FileInputStream(thumbFile))
+        val (w, h) = Identify.size(thumbFile) getOrElse (-1, -1) //dangerous...
+        (bytes, w, h)
+      }
+    }
+  }
+
+  def runConvert(file: File, thumbFile: File, width: Int, quality: Int = 90) {
     exec("convert", "-thumbnail", "%sx" format width,
                     "-gravity", "center",
-                    "-quality", "90",
+                    "-quality", quality.toString,
                     "-interpolate", "bicubic",
                     "+repage",
                     file.getAbsolutePath, thumbFile.getAbsolutePath)
+  }
 
+  def resizeToWidth(bytes: Array[Byte], width: Int): Array[Byte] = {
+    val file = createTempFile(bytes)
+    val thumbFile = File.createTempFile("image-%s-" format width, ".jpg")
+    runConvert(file, thumbFile, width)
     IOUtils.toByteArray(new FileInputStream(thumbFile))
   }
   

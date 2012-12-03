@@ -2,7 +2,7 @@ name := "scala-jhead"
 
 organization := "com.pongr"
 
-version := "0.1-SNAPSHOT"
+version := "0.1.1-SNAPSHOT"
 
 scalaVersion := "2.9.1"
 
@@ -16,7 +16,8 @@ libraryDependencies ++= Seq(
   "commons-lang" % "commons-lang" % "2.5",
   "commons-io" % "commons-io" % "1.4",
   "joda-time" % "joda-time" % "2.1",
-  "org.joda" % "joda-convert" % "1.2"
+  "org.joda" % "joda-convert" % "1.2",
+  "com.typesafe.akka" % "akka-actor" % "2.0.4"
 )
 
 //http://www.scala-sbt.org/using_sonatype.html
