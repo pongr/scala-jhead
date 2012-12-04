@@ -27,6 +27,8 @@ import Util._
 /** Resize and convert images using [[http://www.imagemagick.org/script/convert.php ImageMagick convert tool]]. */
 object Convert extends ImageResizer {
 
+  //TODO use pipes instead of files to communicate with convert
+
   def apply(bytes: Array[Byte]): Either[Seq[String], Array[Byte]] = {
     val file = createTempFile(bytes)
     val result = exec("convert", file.getAbsolutePath, file.getAbsolutePath)
@@ -41,7 +43,7 @@ object Convert extends ImageResizer {
         val thumbFile = File.createTempFile("image-%s-" format width, ".jpg")
         runConvert(file, thumbFile, width, 90)
         val bytes = IOUtils.toByteArray(new FileInputStream(thumbFile))
-        val (w, h) = Identify.size(thumbFile) getOrElse (-1, -1) //dangerous...
+        val (w, h) = Identify.size(thumbFile).right getOrElse (-1, -1) //dangerous...
         (bytes, w, h)
       }
     }
