@@ -32,21 +32,33 @@ object Convert extends ImageResizer {
   def apply(bytes: Array[Byte]): Either[Seq[String], Array[Byte]] = {
     val file = createTempFile(bytes)
     val result = exec("convert", file.getAbsolutePath, file.getAbsolutePath)
-    if (result._2.size > 0) Left(result._2) else Right(getBytes(file))
+    if (result._2.size > 0) Left(result._2) else {
+      val result = getBytes(file)
+
+      //delete temporary files
+      file.delete
+      Right(result)
+    }
   }
 
   def resizeToWidths(bytes: Array[Byte], widths: Int*): Seq[Future[(Array[Byte], Int, Int)]] = {
     val file = createTempFile(bytes)
     implicit val context = ExecutionContext.fromExecutor(Executors.newCachedThreadPool()) //will this leak?
-    widths.toSeq.map { width => 
+    val result = widths.toSeq.map { width => 
       Future { 
         val thumbFile = File.createTempFile("image-%s-" format width, ".jpg")
         runConvert(file, thumbFile, width, 90)
         val bytes = IOUtils.toByteArray(new FileInputStream(thumbFile))
         val (w, h) = Identify.size(thumbFile).right getOrElse (-1, -1) //dangerous...
+        //removing the temporary thumbnail file
+        thumbFile.delete()
         (bytes, w, h)
       }
     }
+
+    //delete temporary files
+    file.delete
+    result
   }
 
   def runConvert(file: File, thumbFile: File, width: Int, quality: Int = 90) {
@@ -62,7 +74,12 @@ object Convert extends ImageResizer {
     val file = createTempFile(bytes)
     val thumbFile = File.createTempFile("image-%s-" format width, ".jpg")
     runConvert(file, thumbFile, width)
-    IOUtils.toByteArray(new FileInputStream(thumbFile))
+    val result = IOUtils.toByteArray(new FileInputStream(thumbFile))
+
+    //delete temporary files
+    file.delete
+    thumbFile.delete
+    result
   }
   
   def resizeToSquare(bytes: Array[Byte], size: Int): Array[Byte] = {
@@ -78,7 +95,12 @@ object Convert extends ImageResizer {
                     "-interpolate", "bicubic",
                     "+repage",
                     file.getAbsolutePath, thumbFile.getAbsolutePath)
-    IOUtils.toByteArray(new FileInputStream(thumbFile))
+    val result = IOUtils.toByteArray(new FileInputStream(thumbFile))
+
+    //delete temporary files
+    file.delete
+    thumbFile.delete
+    result
   }
 
 }
