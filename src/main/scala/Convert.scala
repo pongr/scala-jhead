@@ -44,7 +44,7 @@ object Convert extends ImageResizer {
   def resizeToWidths(bytes: Array[Byte], widths: Int*): Seq[Future[(Array[Byte], Int, Int)]] = {
     val file = createTempFile(bytes)
     implicit val context = ExecutionContext.fromExecutor(Executors.newCachedThreadPool()) //will this leak?
-    val result = widths.toSeq.map { width => 
+    widths.toSeq.map { width => 
       Future { 
         val thumbFile = File.createTempFile("image-%s-" format width, ".jpg")
         runConvert(file, thumbFile, width, 90)
@@ -55,10 +55,6 @@ object Convert extends ImageResizer {
         (bytes, w, h)
       }
     }
-
-    //delete temporary files
-    file.delete
-    result
   }
 
   def runConvert(file: File, thumbFile: File, width: Int, quality: Int = 90) {
