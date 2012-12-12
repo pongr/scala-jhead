@@ -32,13 +32,7 @@ object Convert extends ImageResizer {
   def apply(bytes: Array[Byte]): Either[Seq[String], Array[Byte]] = {
     val file = createTempFile(bytes)
     val result = exec("convert", file.getAbsolutePath, file.getAbsolutePath)
-    if (result._2.size > 0) Left(result._2) else {
-      val result = getBytes(file)
-
-      //delete temporary files
-      file.delete
-      Right(result)
-    }
+    if (result._2.size > 0) Left(result._2) else Right(getBytes(file))
   }
 
   def resizeToWidths(bytes: Array[Byte], widths: Int*): Seq[Future[(Array[Byte], Int, Int)]] = {
@@ -50,8 +44,6 @@ object Convert extends ImageResizer {
         runConvert(file, thumbFile, width, 90)
         val bytes = IOUtils.toByteArray(new FileInputStream(thumbFile))
         val (w, h) = Identify.size(thumbFile).right getOrElse (-1, -1) //dangerous...
-        //removing the temporary thumbnail file
-        thumbFile.delete()
         (bytes, w, h)
       }
     }
@@ -70,12 +62,7 @@ object Convert extends ImageResizer {
     val file = createTempFile(bytes)
     val thumbFile = File.createTempFile("image-%s-" format width, ".jpg")
     runConvert(file, thumbFile, width)
-    val result = IOUtils.toByteArray(new FileInputStream(thumbFile))
-
-    //delete temporary files
-    file.delete
-    thumbFile.delete
-    result
+    IOUtils.toByteArray(new FileInputStream(thumbFile))
   }
   
   def resizeToSquare(bytes: Array[Byte], size: Int): Array[Byte] = {
@@ -91,12 +78,7 @@ object Convert extends ImageResizer {
                     "-interpolate", "bicubic",
                     "+repage",
                     file.getAbsolutePath, thumbFile.getAbsolutePath)
-    val result = IOUtils.toByteArray(new FileInputStream(thumbFile))
-
-    //delete temporary files
-    file.delete
-    thumbFile.delete
-    result
+    IOUtils.toByteArray(new FileInputStream(thumbFile))
   }
 
 }
