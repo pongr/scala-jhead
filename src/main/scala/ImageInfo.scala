@@ -48,7 +48,23 @@ case class ImageInfo(
   resolutionInfo: ResolutionInfo,
 
   thumbInfo: ThumbnailInfo
-)
+) {
+
+  def toMap: Map[String, String] = 
+    ccToMap(fileInfo) ++ ccToMap(generalInfo) ++ ccToMap(otherInfo) ++ ccToMap(resolutionInfo) ++ ccToMap(thumbInfo)
+
+  def ccToMap(cc: AnyRef) = {
+    (Map[String, String]() /: cc.getClass.getDeclaredFields) { (a, field) =>
+      field.setAccessible(true)
+      val value = try {
+        field.get(cc).asInstanceOf[Option[Any]].map(_.toString) getOrElse ""
+      }
+      catch { case e =>  field.get(cc).toString }
+      a + (field.getName -> value)
+    }
+  }
+
+}
 
 object FileInfo extends Constructor[FileInfo] {
   def create = c => FileInfo(c.getString("File name"), c.getDateTime("File date"), c.getInt("File size"))
