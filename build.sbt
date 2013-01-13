@@ -2,8 +2,6 @@ name := "scala-jhead"
 
 organization := "com.pongr"
 
-version := "0.1.4-SNAPSHOT"
-
 scalaVersion := "2.9.1"
 
 resolvers ++= Seq(
@@ -63,3 +61,5 @@ pomExtra := (
     </developer>
   </developers>
 )
+
+seq(sbtrelease.Release.releaseSettings: _*)
