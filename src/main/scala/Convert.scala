@@ -42,7 +42,8 @@ object Convert extends ImageResizer {
       Future { 
         val thumbFile = File.createTempFile("image-%s-" format width, ".jpg")
         runConvert(file, thumbFile, width, 90)
-        val bytes = IOUtils.toByteArray(new FileInputStream(thumbFile))
+        //val bytes = IOUtils.toByteArray(new FileInputStream(thumbFile))
+        val bytes = getBytes(thumbFile)
         val (w, h) = Identify.size(thumbFile).right getOrElse (-1, -1) //dangerous...
         (bytes, w, h)
       }
@@ -62,7 +63,8 @@ object Convert extends ImageResizer {
     val file = createTempFile(bytes)
     val thumbFile = File.createTempFile("image-%s-" format width, ".jpg")
     runConvert(file, thumbFile, width)
-    IOUtils.toByteArray(new FileInputStream(thumbFile))
+    //IOUtils.toByteArray(new FileInputStream(thumbFile))
+    getBytes(thumbFile)
   }
   
   def resizeToSquare(bytes: Array[Byte], size: Int): Array[Byte] = {
@@ -78,7 +80,8 @@ object Convert extends ImageResizer {
                     "-interpolate", "bicubic",
                     "+repage",
                     file.getAbsolutePath, thumbFile.getAbsolutePath)
-    IOUtils.toByteArray(new FileInputStream(thumbFile))
+    //IOUtils.toByteArray(new FileInputStream(thumbFile))
+    getBytes(thumbFile)
   }
 
 }
