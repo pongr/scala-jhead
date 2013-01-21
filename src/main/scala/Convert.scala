@@ -25,7 +25,7 @@ import java.util.concurrent.Executors
 import Util._
 
 /** Resize and convert images using [[http://www.imagemagick.org/script/convert.php ImageMagick convert tool]]. */
-object Convert extends ImageResizer {
+object Convert extends ImageResizer with ImageRotater {
 
   //TODO use pipes instead of files to communicate with convert
 
@@ -82,6 +82,18 @@ object Convert extends ImageResizer {
                     file.getAbsolutePath, thumbFile.getAbsolutePath)
     //IOUtils.toByteArray(new FileInputStream(thumbFile))
     getBytes(thumbFile)
+  }
+
+
+  // 
+  def rotate(bytes: Array[Byte], degree: Int): Future[Array[Byte]] = {
+    val file = createTempFile(bytes)
+    val rotated = File.createTempFile("image-rotated", ".jpg")
+    implicit val context = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
+    Future { 
+      exec("convert", "-rotate", degree.toString, file.getAbsolutePath, rotated.getAbsolutePath)
+      getBytes(rotated)
+    }
   }
 
 }

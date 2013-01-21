@@ -50,5 +50,14 @@ class ConvertSpec extends Specification  {
       IOUtils.contentEquals(new ByteArrayInputStream(thumb425), getClass.getResourceAsStream("/acer-425x756.jpg")) must_== true
     }
 
+    "rotate image image using given degree" in {
+      import akka.dispatch.Await
+      import akka.util.Duration
+
+      val bytes = IOUtils.toByteArray(getClass.getResourceAsStream("/acer.jpg"))
+      val rotatedFuture = Convert.rotate(bytes, 90)
+      val rotated = Await.result(rotatedFuture, Duration(20000, "millis")).asInstanceOf[Array[Byte]]
+      IOUtils.contentEquals(new ByteArrayInputStream(rotated), getClass.getResourceAsStream("/acer-rotate90.jpg")) must_== true
+    }
   }
 }
