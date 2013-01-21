@@ -16,7 +16,12 @@ object Identify extends Logging {
     size findFirstIn out.mkString("\n") match {
       case Some(size(width, height)) => Right((width.toInt, height.toInt))
       case None => 
-        error("Unable to get width/height of %s: out=%s, errors=%s" format (file.getAbsolutePath, out.mkString("\n"), errors.mkString("\n")))
+        error("Unable to get width/height of %s: out=%s, errors=%s %s" format (
+          file.getAbsolutePath, 
+          out.mkString("\n"), 
+          errors.mkString("\n"),
+          Thread.currentThread.getStackTrace.mkString("\n", "\n", "")
+        ))
         Left(errors.mkString("\n"))
     }
   }
